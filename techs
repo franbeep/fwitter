@@ -1,0 +1,9 @@
+techs
+
+nextjs => ssg/ssr + serverless functions
+firebase => store fweets and data
+material UI => UI design
+lodash? => may be needed when fetching and parsing data
+rxjs? => may be needed when fetching and parsing data
+jest/enzyme? => testing
+CI/CD => testing

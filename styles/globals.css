@@ -4,6 +4,16 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  /* background-image: url('/background/bananas.png'); */
+  /* background-image: url('/background/memphis-mini-dark.png'); */
+  /* background-image: url('/background/more-leaves-on-green.png'); */
+  /* background-image: url('/background/morocco-blue.png'); */
+  /* background-image: url('/background/oriental-tiles.png'); */
+  /* background-image: url('/background/pink-dust.png'); */
+  background-image: url('/background/seigaiha.png');
+  /* background-image: url('/background/vintage-wallpaper.png'); */
+  /* background-image: url('/background/wheat.png'); */
+  background-repeat: repeat;
 }
 
 a {
