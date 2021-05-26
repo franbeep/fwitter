@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React, { Children } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Avatar, Badge, Grid, Typography, Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Box } from '@material-ui/core';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,11 +19,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Footer() {
+export default function Footer({ className, ...rest }) {
   const classes = useStyles();
 
   return (
-    <Box component="footer" className={classes.root}>
+    <Box component="footer" className={clsx(classes.root, className)} {...rest}>
       <Typography variant="caption">
         <Box component="span" style={{ float: 'right' }}>
           <Link href="#">Privacy Policy</Link> •{' '}
@@ -35,3 +35,5 @@ export default function Footer() {
     </Box>
   );
 }
+
+Footer.propTypes = {};

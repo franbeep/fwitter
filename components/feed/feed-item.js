@@ -15,12 +15,13 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import {
-  ShareIcon,
-  FavoriteBorderIcon,
-  ChatBubbleOutlineIcon,
-  ReplyIcon,
-  MoreHorizIcon,
+  Share as ShareIcon,
+  FavoriteBorder as FavoriteBorderIcon,
+  ChatBubbleOutline as ChatBubbleOutlineIcon,
+  Reply as ReplyIcon,
+  MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
+
 import moment from 'moment';
 
 import Avatar, { OnlineBadge, OfflineBadge } from '../avatar';
@@ -221,7 +222,7 @@ FeedItem.propTypes = {
     name: PropTypes.string.isRequired,
     slug: PropTypes.string.isRequired,
   }),
-  date: PropTypes.instanceOf(Date),
+  date: PropTypes.instanceOf(Date).isRequired,
   body: PropTypes.string.isRequired,
   image: PropTypes.string,
   isOnline: PropTypes.bool,

@@ -1,17 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-import { Grid, Typography, List, ListItem, Divider } from '@material-ui/core';
+import { Typography, List, ListItem, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
+
+import Base from './base';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    'padding': theme.spacing(3),
-    'justifyContent': 'space-around',
-    '& a:hover': {
-      textDecoration: 'underline',
-    },
-  },
   activity: {
     '& li:nth-child(2n)': {
       background: theme.palette.grey[200],
@@ -22,61 +19,42 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ViewActivity() {
+export default function ViewActivity({ content }) {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={3} className={classes.root}>
-      <Grid item xs={12}>
-        <Typography variant="h5">Activity</Typography>
-      </Grid>
-
-      <Grid item xs={1}>
+    <Base title="Activity Settings">
+      <Base item xs={1}>
         <Divider orientation="vertical" style={{ width: '8px' }} />
-      </Grid>
-
-      <Grid item xs={11}>
+      </Base>
+      <Base item xs={11}>
         <List className={classes.activity}>
-          <ListItem>
-            <Typography variant="subtitle1">
-              <Typography component="span" className={classes.slug}>
-                <Link href="#">@MyTestSlug</Link>
-              </Typography>{' '}
-              commented on your{' '}
-              <Typography component="span" color="secondary">
-                <Link href="#">post</Link>
-              </Typography>{' '}
-              7 minutes ago
-            </Typography>
-          </ListItem>
-
-          <ListItem>
-            <Typography variant="subtitle1">
-              <Typography component="span" className={classes.slug}>
-                <Link href="#">@MyTestSlug</Link>
-              </Typography>{' '}
-              commented on your{' '}
-              <Typography component="span" color="secondary">
-                <Link href="#">post</Link>
-              </Typography>{' '}
-              7 minutes ago
-            </Typography>
-          </ListItem>
-
-          <ListItem>
-            <Typography variant="subtitle1">
-              <Typography component="span" className={classes.slug}>
-                <Link href="#">@MyTestSlug</Link>
-              </Typography>{' '}
-              commented on your{' '}
-              <Typography component="span" color="secondary">
-                <Link href="#">post</Link>
-              </Typography>{' '}
-              7 minutes ago
-            </Typography>
-          </ListItem>
+          {content.map((index, item) => (
+            <ListItem index={index}>
+              <Typography variant="subtitle1">
+                <Typography component="span" className={classes.slug}>
+                  <Link href="#">{`@${item.slug}`}</Link>
+                </Typography>{' '}
+                commented on your{' '}
+                <Typography component="span" color="secondary">
+                  <Link href={`/${item.link}`}>post</Link>
+                </Typography>{' '}
+                {moment(item.date).fromNow()}
+              </Typography>
+            </ListItem>
+          ))}
         </List>
-      </Grid>
-    </Grid>
+      </Base>
+    </Base>
   );
 }
+
+ViewActivity.propTypes = {
+  content: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      link: PropTypes.string.isRequired,
+      date: PropTypes.instanceOf(Date).isRequired,
+    })
+  ),
+};

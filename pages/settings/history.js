@@ -8,7 +8,7 @@ export default function History() {
   return (
     <BasePage>
       <GoBack />
-      <ViewHistory />
+      <ViewHistory content={[]} />
     </BasePage>
   );
 }

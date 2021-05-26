@@ -8,7 +8,7 @@ export default function PrivacySettings() {
   return (
     <BasePage>
       <GoBack />
-      <PrivacySettingsForm />
+      <PrivacySettingsForm updateSettingsCallback={() => {}} />
     </BasePage>
   );
 }

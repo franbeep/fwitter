@@ -8,7 +8,7 @@ export default function ActivitySettings() {
   return (
     <BasePage>
       <GoBack />
-      <ViewActivity />
+      <ViewActivity content={[]} />
     </BasePage>
   );
 }

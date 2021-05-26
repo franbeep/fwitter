@@ -6,7 +6,11 @@ export default function AccountSettings() {
   return (
     <BasePage>
       <GoBack />
-      <AccountSettingsForm />
+      <AccountSettingsForm
+        updateSettingsCallback={() => {}}
+        lockAccountCallback={() => {}}
+        terminateAccountCallback={() => {}}
+      />
     </BasePage>
   );
 }

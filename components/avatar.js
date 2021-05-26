@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import Image from 'next/image';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Avatar, Badge } from '@material-ui/core';
-
-import Image from 'next/image';
+import clsx from 'clsx';
 
 export const OnlineBadge = withStyles(theme => ({
   '@keyframes ripple': {

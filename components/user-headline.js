@@ -1,11 +1,12 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import React, { Children } from 'react';
-import Image from 'next/image';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Typography, Divider } from '@material-ui/core';
 
 import Avatar from './avatar';
+
+const FALLBACK_BACKGROUND_IMAGE = '/background/geometry.png';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,28 +33,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function UserHeadline({
-  user,
-  backgroundImage,
-  fallbackBackgroundImage = '/background/geometry.png', // TODO: add default background to process.env
-}) {
+export default function UserHeadline({ user, backgroundImage }) {
   const classes = useStyles();
 
   return (
     <>
       <Box className={classes.root}>
+        {/* Background */}
         <Box
           className={classes.media}
           style={{
-            background: `url(${backgroundImage}), url(${fallbackBackgroundImage})`,
+            background: `url(${backgroundImage}), url(${FALLBACK_BACKGROUND_IMAGE})`,
           }}
         ></Box>
+        {/* Avatar */}
         <Avatar
           src={user.avatar}
           alt="User Avatar"
           size="extra-large"
           className={classes.avatar}
         />
+        {/* Information */}
         <Box className={classes.textBox}>
           <Typography component="h1" variant="h4">
             {user.name}
@@ -89,5 +89,4 @@ UserHeadline.propTypes = {
       .isRequired,
   }).isRequired,
   backgroundImage: PropTypes.string,
-  fallbackBackgroundImage: PropTypes.string,
 };

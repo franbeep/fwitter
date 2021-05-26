@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Container, Box } from '@material-ui/core';
@@ -44,20 +44,20 @@ export default function Layout({ children, spacing = 2 }) {
   const classes = useStyles();
 
   const childrenArray = React.Children.toArray(children);
+  const [left, middle, right] = childrenArray;
 
-  const left = childrenArray[0];
-  const middle = childrenArray[1];
-  const right = childrenArray[2];
-
-  // * good example of zip
   return (
     <Container className={classes.root}>
       <Grid container spacing={spacing}>
         <Grid item xs={3} className={classes.marginSticky}>
-          <Box className={classes.left}>{left.props.children}</Box>
+          <Box className={classes.left} component="nav">
+            {left.props.children}
+          </Box>
         </Grid>
         <Grid item xs={6}>
-          <Box className={classes.middle}>{middle.props.children}</Box>
+          <Box className={classes.middle} component="main">
+            {middle.props.children}
+          </Box>
         </Grid>
         <Grid item xs={3} className={classes.marginSticky}>
           <Box className={classes.right}>{right.props.children}</Box>

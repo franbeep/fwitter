@@ -1,30 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
-import FeedItem from './feed-item';
+import FeedItem from './feed/feed-item';
 
-const useStyles = makeStyles(theme => ({
-  feed: {
-    marginTop: '0.5em',
-  },
-}));
-
-export default function FeedContainer({ content, ...rest }) {
-  const classes = useStyles();
-
+export default function UserFeedContainer({ content, ...rest }) {
   return (
     <Box {...rest}>
-      <Typography
-        variant="h4"
-        component="h2"
-        className={classes.feed}
-        paragraph
-      >
-        # Trending
-      </Typography>
       {content.map((feed, index) => (
         <FeedItem key={index} {...feed} />
       ))}
@@ -32,7 +15,7 @@ export default function FeedContainer({ content, ...rest }) {
   );
 }
 
-FeedContainer.propTypes = {
+UserFeedContainer.propTypes = {
   content: PropTypes.arrayOf(
     PropTypes.shape({
       user: PropTypes.shape({

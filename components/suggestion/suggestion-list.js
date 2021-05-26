@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Typography, Divider } from '@material-ui/core';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import Suggestion from './suggestion';
-import { genereateSuggestion } from '../../data/suggestion';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,12 +31,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SuggestionList({ suggestions, ...rest }) {
+export default function SuggestionList({ content, className, ...rest }) {
   const classes = useStyles();
-
-  const initialSuggestions = new Array(4)
-    .fill(1)
-    .map(_ => genereateSuggestion());
 
   return (
     <Box>
@@ -45,8 +41,8 @@ export default function SuggestionList({ suggestions, ...rest }) {
           Relevant Content
         </Typography>
       </Box>
-      <Box className={classes.root} {...rest}>
-        {initialSuggestions.map((suggestion, index) => (
+      <Box className={clsx(classes.root, className)} {...rest}>
+        {content.map((suggestion, index) => (
           <Box key={index}>
             {index > 0 && <Divider />}
             <Box className={classes.suggestionParent}>
@@ -60,7 +56,7 @@ export default function SuggestionList({ suggestions, ...rest }) {
 }
 
 SuggestionList.propTypes = {
-  suggestions: PropTypes.arrayOf(
+  content: PropTypes.arrayOf(
     PropTypes.shape({
       image: PropTypes.string,
       slug: PropTypes.string,

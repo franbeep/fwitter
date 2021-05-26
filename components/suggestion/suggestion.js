@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { Grid, Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { isNumber, isString } from 'lodash';
+
+import { simplifyNumber } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
     'margin': '0',
     'padding': '0.5em',
-    // 'padding': theme.spacing(2),
     '& a': {
       'color': 'inherit',
       'textDecoration': 'none',
@@ -51,19 +53,20 @@ export default function Suggestion({
 }) {
   const classes = useStyles();
 
+  if (isNumber(numberOfFollowers))
+    numberOfFollowers = simplifyNumber(numberOfFollowers);
+
   return (
     <Grid container spacing={2} className={clsx(classes.root, className)}>
       <Grid item xs={8}>
         <Box className={classes.suggestion}>
-          <Typography variant="body1">
-            {title} • {category}
-          </Typography>
+          <Typography variant="body1">{title}</Typography>
           <Typography variant="caption" className={classes.slug} paragraph>
             <Link href="#">{`@${slug}`}</Link>
-            {onFire ? ' • On Fire 🔥' : ''}
+            {` • ${category}`}
           </Typography>
           <Typography variant="caption">
-            {numberOfFollowers} Following
+            {numberOfFollowers} Following{onFire ? ' 🔥' : ''}
           </Typography>
         </Box>
       </Grid>

@@ -16,11 +16,11 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import {
-  ShareIcon,
-  FavoriteBorderIcon,
-  ChatBubbleOutlineIcon,
-  ReplyIcon,
-  MoreHorizIcon,
+  Share as ShareIcon,
+  FavoriteBorder as FavoriteBorderIcon,
+  ChatBubbleOutline as ChatBubbleOutlineIcon,
+  Reply as ReplyIcon,
+  MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
 
 import moment from 'moment';

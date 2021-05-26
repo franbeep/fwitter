@@ -1,36 +1,32 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Grid, Typography, Switch, FormControlLabel } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Switch, FormControlLabel } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-}));
+import Base from './base';
 
-export default function PageSettingsForm() {
-  const classes = useStyles();
+export default function PageSettingsForm({ updateSettingsCallback }) {
   const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
+    showLeftProfile: true,
+    showRelevantContent: true,
+    showAdditionalTrends: true,
+    showPosts: true,
+    showReplies: true,
+    showLikes: true,
   });
 
   const handleChange = event => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    const newState = { ...state, [event.target.name]: event.target.checked };
+    setState(newState);
+    updateSettingsCallback(newState);
   };
 
   return (
-    <Grid container spacing={3} className={classes.root}>
-      <Grid item xs={12}>
-        <Typography variant="h5">Page Settings</Typography>
-      </Grid>
-
-      <Grid item xs={12}>
+    <Base title="Page Settings">
+      <Base item xs={12}>
         <Typography variant="h6">General</Typography>
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -39,9 +35,9 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showLeftProfile}
               onChange={handleChange}
-              name="checkedA"
+              name="showLeftProfile"
             />
           }
           label={
@@ -50,9 +46,8 @@ export default function PageSettingsForm() {
             </Typography>
           }
         />
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -61,18 +56,17 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showRelevantContent}
               onChange={handleChange}
-              name="checkedA"
+              name="showRelevantContent"
             />
           }
           label={
             <Typography variant={'body2'}>Show relevant content</Typography>
           }
         />
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -81,9 +75,9 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showAdditionalTrends}
               onChange={handleChange}
-              name="checkedA"
+              name="showAdditionalTrends"
             />
           }
           label={
@@ -92,13 +86,11 @@ export default function PageSettingsForm() {
             </Typography>
           }
         />
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="h6">Activity</Typography>
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -107,16 +99,15 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showPosts}
               onChange={handleChange}
-              name="checkedA"
+              name="showPosts"
             />
           }
           label={<Typography variant={'body2'}>Show posts</Typography>}
         />
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -125,16 +116,15 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showReplies}
               onChange={handleChange}
-              name="checkedA"
+              name="showReplies"
             />
           }
           label={<Typography variant={'body2'}>Show replies</Typography>}
         />
-      </Grid>
-
-      <Grid item xs={12}>
+      </Base>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -143,14 +133,18 @@ export default function PageSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.showLikes}
               onChange={handleChange}
-              name="checkedA"
+              name="showLikes"
             />
           }
           label={<Typography variant={'body2'}>Show likes</Typography>}
         />
-      </Grid>
-    </Grid>
+      </Base>
+    </Base>
   );
 }
+
+PageSettingsForm.propTypes = {
+  updateSettingsCallback: PropTypes.func.isRequired,
+};

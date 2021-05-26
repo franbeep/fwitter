@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Button, Badge } from '@material-ui/core';
+import { Button, Badge, Box } from '@material-ui/core';
 
 const CustomBadge = withStyles(theme => ({
   badge: {
@@ -21,15 +21,20 @@ const useStyles = makeStyles(theme => ({
 export default function ProfileAction({
   to,
   icon,
+  callback,
   children,
   badgeContent = null,
 }) {
   const classes = useStyles();
-  const Icon = icon;
 
   const wrapper = content => (
     <Link href={to}>
-      <Button startIcon={<Icon />} className={classes.button} size="large">
+      <Button
+        startIcon={icon}
+        className={classes.button}
+        onClick={callback}
+        size="large"
+      >
         {content}
       </Button>
     </Link>
@@ -47,7 +52,8 @@ export default function ProfileAction({
 
 ProfileAction.propTypes = {
   to: PropTypes.string.isRequired,
-  icon: PropTypes.elementType.isRequired,
-  badgeContent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  icon: PropTypes.object.isRequired,
+  callback: PropTypes.func.isRequired,
   children: PropTypes.any.isRequired,
+  badgeContent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

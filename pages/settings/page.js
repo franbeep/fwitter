@@ -8,7 +8,7 @@ export default function PageSettings() {
   return (
     <BasePage>
       <GoBack />
-      <PageSettingsForm />
+      <PageSettingsForm updateSettingsCallback={() => {}} />
     </BasePage>
   );
 }

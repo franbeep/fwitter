@@ -1,39 +1,34 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Button,
-  Grid,
   Typography,
   Switch,
   FormControlLabel,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-}));
+import Base from './base';
 
-export default function AccountSettingsForm() {
-  const classes = useStyles();
+export default function AccountSettingsForm({
+  updateSettingsCallback,
+  lockAccountCallback,
+  terminateAccountCallback,
+}) {
   const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
+    nsfwContent: true,
   });
 
   const handleChange = event => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    const newState = { ...state, [event.target.name]: event.target.checked };
+    setState(newState);
+    updateSettingsCallback(newState);
   };
 
   return (
-    <Grid container spacing={3} className={classes.root}>
-      <Grid item xs={12}>
-        <Typography variant="h5">Account Settings</Typography>
-      </Grid>
-
+    <Base title="Account Settings">
       {/* Show NSFW content */}
-      <Grid item xs={12}>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Be A let forth, isn't give us. Night him man form air rule, seasons.
           Yielding bring. Third days spirit beast there own waters third set
@@ -42,19 +37,19 @@ export default function AccountSettingsForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={state.checkedA}
+              checked={state.nsfwContent}
               onChange={handleChange}
-              name="checkedA"
+              name="nsfwContent"
             />
           }
           label={
             <Typography variant={'body2'}>NSFW Content Allowed</Typography>
           }
         />
-      </Grid>
+      </Base>
 
       {/* lock account */}
-      <Grid item xs={12}>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Two which you'll the herb saying grass form heaven Was. Shall she'd us
           rule greater make very female greater their tree meat there dry,
@@ -62,13 +57,18 @@ export default function AccountSettingsForm() {
           dominion.
         </Typography>
 
-        <Button variant="contained" size="small" disableElevation>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={lockAccountCallback}
+          disableElevation
+        >
           Lock Account
         </Button>
-      </Grid>
+      </Base>
 
       {/* terminate account */}
-      <Grid item xs={12}>
+      <Base item xs={12}>
         <Typography variant="caption" paragraph>
           Also signs forth lights you're without. Was seasons. Open also for.
           Winged sixth from unto first. Cattle Fish she'd. Don't kind open
@@ -92,11 +92,18 @@ export default function AccountSettingsForm() {
           variant="contained"
           color="secondary"
           size="small"
+          onClick={terminateAccountCallback}
           disableElevation
         >
           Terminate Account
         </Button>
-      </Grid>
-    </Grid>
+      </Base>
+    </Base>
   );
 }
+
+AccountSettingsForm.propTypes = {
+  updateSettingsCallback: PropTypes.func.isRequired,
+  lockAccountCallback: PropTypes.func.isRequired,
+  terminateAccountCallback: PropTypes.func.isRequired,
+};

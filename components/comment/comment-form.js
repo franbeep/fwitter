@@ -11,7 +11,10 @@ import {
   Menu,
   CircularProgress,
 } from '@material-ui/core';
-import { ClearAllIcon, InsertEmoticonIcon } from '@material-ui/icons';
+import {
+  ClearAll as ClearAllIcon,
+  InsertEmoticon as InsertEmoticonIcon,
+} from '@material-ui/icons';
 import _ from 'lodash';
 import { useInView } from 'react-intersection-observer';
 import { useDropzone } from 'react-dropzone';
