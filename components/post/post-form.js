@@ -29,12 +29,10 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
   },
   textfield: {
-    // margin: '1em',
     width: '100%',
     marginBottom: '0em',
   },
   input: {
-    // width: '100%',
     marginBottom: '0em',
   },
   dragTo: {
@@ -85,8 +83,6 @@ const useStyles = makeStyles(theme => ({
 
 const MAX_COUNT = 140;
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 function EmojisContainer({ handleAddEmoji, classes, spacing = 2 }) {
   const [amount, setAmount] = React.useState(100);
 
@@ -134,10 +130,9 @@ function EmojisContainer({ handleAddEmoji, classes, spacing = 2 }) {
 }
 const EmojisContainerMemoized = React.memo(EmojisContainer);
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-export default function PostForm({ callback }) {
-  // const [body, setBody] = React.useState('');
+export function generateBaseInput() {
+  const classes = useStyles();
+  const inputRef = React.useRef(null);
   const [body, dispatchBody] = React.useReducer((state, payload) => {
     switch (payload.action) {
       case 'add':
@@ -146,22 +141,143 @@ export default function PostForm({ callback }) {
         return payload.value;
     }
   }, '');
+  const handleInputChange = ev => {
+    dispatchBody({ action: 'set', value: ev.target.value });
+  };
+
+  return {
+    getText: () => body,
+    dispatch: dispatchBody,
+    ref: inputRef,
+    component: ({ children, ...rest }) => (
+      <div {...rest} onClick={undefined}>
+        <InputBase
+          className={classes.input}
+          placeholder="What's going on?"
+          fullWidth
+          multiline
+          aria-describedby="body-text"
+          inputProps={{ maxLength: MAX_COUNT }}
+          inputRef={inputRef}
+          value={body}
+          autoFocus
+          onChange={handleInputChange}
+        />
+        <FormHelperText id="count-text" style={{ float: 'right' }}>
+          {body.length}/{MAX_COUNT}
+        </FormHelperText>
+        {/* drag input */}
+        {children}
+      </div>
+    ),
+  };
+}
+
+export function EmojisOptionButton({ dispatch, inputRef }) {
   const [anchor, setAnchor] = React.useState(null);
+
+  const handleClick = event => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchor(null);
+  };
+
+  const handleAddEmoji = React.useCallback(emoji => {
+    handleClose();
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 100);
+    dispatch({ action: 'add', value: ` ${emoji}` });
+  }, []);
+
+  return (
+    <>
+      <IconButton
+        aria-controls="insert-emoji-menu"
+        aria-haspopup="true"
+        aria-label="insert emoji"
+        onClick={handleClick}
+      >
+        <InsertEmoticonIcon />
+      </IconButton>
+      <Menu
+        id="insert-emoji-menu"
+        anchorEl={anchor}
+        keepMounted
+        open={Boolean(anchor)}
+        onClose={handleClose}
+        component="div"
+      >
+        {/* hacks! don't remove this */}
+        <span style={{ display: 'none' }}></span>
+        <EmojisContainerMemoized handleAddEmoji={handleAddEmoji} />
+      </Menu>
+    </>
+  );
+}
+
+export function ClearOptionButton({ dispatch, setMedia }) {
+  return (
+    <IconButton
+      aria-label="clear all"
+      onClick={() => {
+        dispatch({ action: 'set', value: '' });
+        setMedia(null);
+      }}
+    >
+      <ClearAllIcon />
+    </IconButton>
+  );
+}
+
+export function BaseForm({ callback, className, children }) {
+  const classes = useStyles();
+
+  const handleSubmit = ev => {
+    // send data here
+    callback();
+  };
+
+  const [baseInput, ...actions] = children;
+
+  return (
+    <Grid
+      container
+      spacing={2}
+      className={className ? className : classes.root}
+    >
+      <Grid item xs={12}>
+        <form onSubmit={handleSubmit}>
+          {/* input base */}
+          {baseInput}
+
+          <div>
+            {actions}
+
+            {/* Send */}
+            <Button onClick={handleSubmit}>Send</Button>
+          </div>
+        </form>
+      </Grid>
+    </Grid>
+  );
+}
+
+export default function PostForm({ callback }) {
+  const classes = useStyles();
   const [loadedMedia, setLoadedMedia] = React.useState(null);
   const [file, setFile] = React.useState(null); // !Review this; perhaps no need to have it with loadedMedia
-  const inputRef = React.useRef(null);
   const onDrop = React.useCallback(acceptedFiles => {
     // Do something with the files
     console.log('dropped!!');
     const file = acceptedFiles[0];
-
     const reader = new FileReader();
-
     reader.onload = event => {
       setLoadedMedia(event.target.result);
     };
     reader.readAsDataURL(file);
-
     setFile(file);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -170,134 +286,64 @@ export default function PostForm({ callback }) {
     maxFiles: 1,
   });
 
-  const classes = useStyles();
-
-  const handleSubmit = ev => {
-    // send data here
-  };
-
-  const handleInputChange = ev => {
-    dispatchBody({ action: 'set', value: ev.target.value });
-  };
-
-  // open menu
-  const handleClick = event => {
-    setAnchor(event.currentTarget);
-  };
-
-  // close menu
-  const handleClose = () => {
-    setAnchor(null);
-  };
-
-  // add emoji to text
-  const handleAddEmoji = React.useCallback(emoji => {
-    handleClose();
-    setTimeout(() => {
-      inputRef.current.focus();
-    }, 100);
-    dispatchBody({ action: 'add', value: ` ${emoji}` });
-  }, []);
+  const {
+    getText,
+    dispatch,
+    ref: inputRef,
+    component: BaseInput,
+  } = generateBaseInput();
 
   return (
-    <Grid container spacing={2} className={classes.root}>
-      <Grid item xs={12}>
-        <form onSubmit={handleSubmit}>
-          {/* input base */}
-          <div {...getRootProps()} onClick={undefined}>
-            <InputBase
-              className={classes.input}
-              placeholder="What's going on?"
-              fullWidth
-              multiline
-              aria-describedby="body-text"
-              inputProps={{ maxLength: MAX_COUNT }}
-              inputRef={inputRef}
-              value={body}
-              autoFocus
-              onChange={handleInputChange}
+    <BaseForm callback={() => callback(getText())}>
+      {/* input base */}
+      <BaseInput {...getRootProps()}>
+        {/* drag input */}
+        <input {...getInputProps()} onClick={undefined} />
+        {isDragActive && <div className={classes.dragTo}></div>}
+        {loadedMedia && (
+          <Box className={classes.media}>
+            <Image
+              src={loadedMedia}
+              alt="Post Media"
+              layout="fill"
+              objectFit="cover"
+              quality={100}
             />
-            <FormHelperText id="count-text" style={{ float: 'right' }}>
-              {body.length}/{MAX_COUNT}
-            </FormHelperText>
-            {/* drag input */}
-            <input {...getInputProps()} onClick={undefined} />
-            {isDragActive && <div className={classes.dragTo}></div>}
-            {loadedMedia && (
-              <Box className={classes.media}>
-                <Image
-                  src={loadedMedia}
-                  alt="Post Media"
-                  layout="fill"
-                  objectFit="cover"
-                  quality={100}
-                />
-                <div className={classes.imageOverlay}>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="secondary"
-                    disableElevation
-                    style={{ width: '50%' }}
-                    onClick={() => setLoadedMedia(null)}
-                  >
-                    clear
-                  </Button>
-                </div>
-              </Box>
-            )}
-          </div>
-          <div>
-            {/* Image Button */}
-            <IconButton
-              aria-label="insert image"
-              onClick={() => {
-                const { ref } = getInputProps();
-                ref.current.click();
-              }}
-            >
-              <ImageIcon />
-            </IconButton>
+            <div className={classes.imageOverlay}>
+              <Button
+                size="small"
+                variant="contained"
+                color="secondary"
+                disableElevation
+                style={{ width: '50%' }}
+                onClick={() => setLoadedMedia(null)}
+              >
+                clear
+              </Button>
+            </div>
+          </Box>
+        )}
+      </BaseInput>
 
-            {/* Insert Emoji Button */}
-            <IconButton
-              aria-controls="insert-emoji-menu"
-              aria-haspopup="true"
-              aria-label="insert emoji"
-              onClick={handleClick}
-            >
-              <InsertEmoticonIcon />
-            </IconButton>
-            <Menu
-              id="insert-emoji-menu"
-              anchorEl={anchor}
-              keepMounted
-              open={Boolean(anchor)}
-              onClose={handleClose}
-              component="div"
-            >
-              {/* hacks! don't remove this */}
-              <span style={{ display: 'none' }}></span>
-              <EmojisContainerMemoized handleAddEmoji={handleAddEmoji} />
-            </Menu>
+      {/* actions */}
 
-            {/* Clear All Button */}
-            <IconButton
-              aria-label="clear all"
-              onClick={() => {
-                dispatchBody({ action: 'set', value: '' });
-                setLoadedMedia(null);
-              }}
-            >
-              <ClearAllIcon />
-            </IconButton>
+      {/* Image Button */}
+      <IconButton
+        aria-label="insert image"
+        onClick={() => {
+          const { ref } = getInputProps();
+          ref.current.click();
+        }}
+      >
+        <ImageIcon />
+      </IconButton>
 
-            {/* Send */}
-            <Button onClick={handleSubmit}>Send</Button>
-          </div>
-        </form>
-      </Grid>
-    </Grid>
+      {/* Insert Emoji Button */}
+      <EmojisOptionButton dispatch={dispatch} inputRef={inputRef} />
+
+      {/* Clear All Button */}
+      <ClearOptionButton dispatch={dispatch} setMedia={setLoadedMedia} />
+    </BaseForm>
   );
 }
 
