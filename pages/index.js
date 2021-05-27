@@ -9,7 +9,9 @@ import Loading from '../components/loading';
 
 export default function Home() {
   const fetcher = url => axios.get(url).then(res => res.data);
-  const { data: feed, error } = useSWR(`/api/feed`, fetcher);
+  // const { data: feed, error } = useSWR(`/api/feed`, fetcher);
+
+  return <PostForm callback={() => {}} />;
 
   if (error)
     return (
@@ -24,14 +26,14 @@ export default function Home() {
   if (!feed)
     return (
       <BasePage>
-        <PostForm />
+        <PostForm callback={() => {}} />
         <Loading size={70} />
       </BasePage>
     );
 
   return (
     <BasePage>
-      <PostForm />
+      <PostForm callback={() => {}} />
       <Feed content={feed} />
     </BasePage>
   );

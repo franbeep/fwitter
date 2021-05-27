@@ -83,7 +83,8 @@ const useStyles = makeStyles(theme => ({
 
 const MAX_COUNT = 140;
 
-function EmojisContainer({ handleAddEmoji, classes, spacing = 2 }) {
+function EmojisContainer({ handleAddEmoji, spacing = 2 }) {
+  const classes = useStyles();
   const [amount, setAmount] = React.useState(100);
 
   const EmojisList = ({ amount, spacing }) =>

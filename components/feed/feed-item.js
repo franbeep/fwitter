@@ -178,7 +178,7 @@ export function BaseContent({ user, date, body, image }) {
             component="span"
             className={classes.slug}
           >
-            <Link href={`/user/${slug}`}>{`@${user.slug}`}</Link>{' '}
+            <Link href={`/user/${user.slug}`}>{`@${user.slug}`}</Link>{' '}
           </Typography>
           <Typography variant="subtitle2" component="span">
             • Posted {moment(date).fromNow()}
