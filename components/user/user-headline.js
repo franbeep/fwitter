@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Typography, Divider } from '@material-ui/core';
 
-import Avatar from './avatar';
+import Avatar from '../avatar';
+import { simplifyNumber } from '../../utils';
 
 const FALLBACK_BACKGROUND_IMAGE = '/background/geometry.png';
 
@@ -30,6 +31,9 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     border: `7px ${theme.palette.background.default} solid`,
     marginTop: '-4em',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 }));
 
@@ -63,10 +67,33 @@ export default function UserHeadline({ user, backgroundImage }) {
             variant="h6"
             className={classes.slug}
           >{`@${user.slug}`}</Typography>
-          <Typography
-            component="h3"
-            variant="subtitle1"
-          >{`${user.postCount} Posts • ${user.likesCount} Likes • ${user.followers} Followers • ${user.following} Following`}</Typography>
+          <Typography component="h3" variant="subtitle2">
+            <Box className></Box>
+            <Typography
+              component="span"
+              variant="subtitle1"
+              className={classes.bold}
+            >{`${simplifyNumber(user.postCount)} `}</Typography>
+            Posts{' • '}
+            <Typography
+              component="span"
+              variant="subtitle1"
+              className={classes.bold}
+            >{`${simplifyNumber(user.likesCount)} `}</Typography>{' '}
+            Likes{' • '}
+            <Typography
+              component="span"
+              variant="subtitle1"
+              className={classes.bold}
+            >{`${simplifyNumber(user.followers)} `}</Typography>{' '}
+            Followers{' • '}
+            <Typography
+              component="span"
+              variant="subtitle1"
+              className={classes.bold}
+            >{`${simplifyNumber(user.following)} `}</Typography>
+            Following
+          </Typography>
         </Box>
       </Box>
       <Divider />

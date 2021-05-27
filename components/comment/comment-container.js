@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Divider } from '@material-ui/core';
 
 import Comment from './comment';
-import { genereateComment } from '../../data/comment';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,14 +16,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CommentsContainer() {
+export default function CommentsContainer({ content, ...rest }) {
   const classes = useStyles();
-
-  const initialComments = new Array(5).fill(1).map(_ => genereateComment());
 
   return (
     <Box className={classes.root}>
-      {initialComments.map((comment, index) => (
+      {content.map((comment, index) => (
         <Box key={index} className={classes.comment}>
           <Divider />
           <Comment {...comment} />
@@ -33,3 +30,16 @@ export default function CommentsContainer() {
     </Box>
   );
 }
+
+CommentsContainer.propTypes = {
+  content: PropTypes.arrayOf(
+    PropTypes.shape({
+      user: PropTypes.shape({
+        avatar: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }),
+      text: PropTypes.string.isRequired,
+      date: PropTypes.instanceOf(Date),
+    })
+  ),
+};

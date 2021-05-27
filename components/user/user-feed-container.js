@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box } from '@material-ui/core';
 
-import FeedItem from './feed/feed-item';
+import FeedItem from '../feed/feed-item';
 
 export default function UserFeedContainer({ content, ...rest }) {
   return (
@@ -13,6 +13,8 @@ export default function UserFeedContainer({ content, ...rest }) {
       ))}
     </Box>
   );
+
+  // TODO: Pagination/Load More
 }
 
 UserFeedContainer.propTypes = {

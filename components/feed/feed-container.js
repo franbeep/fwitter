@@ -30,6 +30,8 @@ export default function FeedContainer({ content, ...rest }) {
       ))}
     </Box>
   );
+
+  // TODO: Pagination/Load More
 }
 
 FeedContainer.propTypes = {

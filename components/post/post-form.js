@@ -13,9 +13,11 @@ import {
   Box,
   CircularProgress,
 } from '@material-ui/core';
-import ClearAllIcon from '@material-ui/icons/ClearAll';
-import ImageIcon from '@material-ui/icons/Image';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import {
+  ClearAll as ClearAllIcon,
+  Image as ImageIcon,
+  InsertEmoticon as InsertEmoticonIcon,
+} from '@material-ui/icons';
 import _ from 'lodash';
 import { useInView } from 'react-intersection-observer';
 import { useDropzone } from 'react-dropzone';
@@ -70,31 +72,39 @@ const useStyles = makeStyles(theme => ({
       borderRadius: theme.spacing(1),
     },
   },
+  emojisContainer: {
+    padding: '0.5em',
+    maxWidth: '200px',
+    maxHeight: '100px',
+    overflow: 'auto',
+  },
+  emojisListItem: {
+    color: 'rgba(0,0,0,1)',
+  },
 }));
 
 const MAX_COUNT = 140;
 
-function EmojisContainer({ handleAddEmoji = () => {}, spacing = 2 }) {
-  // !Review this later
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+function EmojisContainer({ handleAddEmoji, classes, spacing = 2 }) {
   const [amount, setAmount] = React.useState(100);
-  const [locked, setLocked] = React.useState(false);
 
   const EmojisList = ({ amount, spacing }) =>
     _.take(EMOJIS, amount).map(emoji => (
-      <Grid item xs={spacing} key={emoji}>
+      <Grid item xs={spacing} key={emoji} component="li">
         <IconButton
           size="small"
           onClick={() => {
             handleAddEmoji(emoji);
           }}
-          style={{ color: 'rgba(0,0,0,1)' }}
+          className={classes.emojisListItem}
         >
           {emoji}
         </IconButton>
       </Grid>
     ));
-
-  const LoadMore = ({ locked, handleInView }) => {
+  const LoadMore = ({ handleInView }) => {
     const { ref, inView, entry } = useInView({
       threshold: 0,
     });
@@ -103,31 +113,18 @@ function EmojisContainer({ handleAddEmoji = () => {}, spacing = 2 }) {
       if (inView) handleInView();
     }, [inView]);
 
-    if (locked) return <span style={{ display: 'none' }}></span>;
-
     return (
       <Grid item xs={12} ref={ref} style={{ textAlign: 'center' }}>
         <CircularProgress size={15} color="secondary" />
       </Grid>
     );
   };
-
-  const EmojisListMemoized = React.memo(EmojisList);
   const LoadMoreMemoized = React.memo(LoadMore);
 
   return (
-    <Grid
-      container
-      style={{
-        padding: '0.5em',
-        maxWidth: '200px',
-        maxHeight: '100px',
-        overflow: 'auto',
-      }}
-    >
-      <EmojisListMemoized amount={amount} spacing={spacing} />
+    <Grid container component="ul" className={classes.emojisContainer}>
+      <EmojisList amount={amount} spacing={spacing} />
       <LoadMoreMemoized
-        locked={locked}
         handleInView={React.useCallback(() => {
           setAmount(amount + 100);
         })}
@@ -135,8 +132,9 @@ function EmojisContainer({ handleAddEmoji = () => {}, spacing = 2 }) {
     </Grid>
   );
 }
-
 const EmojisContainerMemoized = React.memo(EmojisContainer);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 export default function PostForm({ callback }) {
   // const [body, setBody] = React.useState('');
@@ -194,7 +192,6 @@ export default function PostForm({ callback }) {
 
   // add emoji to text
   const handleAddEmoji = React.useCallback(emoji => {
-    // TODO: Opt => when menu closed, return number of emojis to 100; also reduce number of emojis
     handleClose();
     setTimeout(() => {
       inputRef.current.focus();
@@ -206,6 +203,7 @@ export default function PostForm({ callback }) {
     <Grid container spacing={2} className={classes.root}>
       <Grid item xs={12}>
         <form onSubmit={handleSubmit}>
+          {/* input base */}
           <div {...getRootProps()} onClick={undefined}>
             <InputBase
               className={classes.input}
@@ -222,6 +220,7 @@ export default function PostForm({ callback }) {
             <FormHelperText id="count-text" style={{ float: 'right' }}>
               {body.length}/{MAX_COUNT}
             </FormHelperText>
+            {/* drag input */}
             <input {...getInputProps()} onClick={undefined} />
             {isDragActive && <div className={classes.dragTo}></div>}
             {loadedMedia && (
@@ -275,8 +274,10 @@ export default function PostForm({ callback }) {
               keepMounted
               open={Boolean(anchor)}
               onClose={handleClose}
+              component="div"
             >
-              <span style={{ display: 'none' }}></span> {/* hacks! */}
+              {/* hacks! don't remove this */}
+              <span style={{ display: 'none' }}></span>
               <EmojisContainerMemoized handleAddEmoji={handleAddEmoji} />
             </Menu>
 
@@ -292,7 +293,7 @@ export default function PostForm({ callback }) {
             </IconButton>
 
             {/* Send */}
-            <Button>Send</Button>
+            <Button onClick={handleSubmit}>Send</Button>
           </div>
         </form>
       </Grid>
@@ -303,3 +304,5 @@ export default function PostForm({ callback }) {
 PostForm.propTypes = {
   callback: PropTypes.func.isRequired,
 };
+
+// TODO: Opt => when menu closed, return number of emojis to 100; also reduce number of emojis

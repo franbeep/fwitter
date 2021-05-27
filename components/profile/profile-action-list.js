@@ -14,9 +14,6 @@ import { Box } from '@material-ui/core';
 import ProfileAction from './profile-action';
 
 export default function ProfileActionList({ badgeContent, ...rest }) {
-  console.log('badgeContent:');
-  console.log(badgeContent);
-
   return (
     <Box {...rest}>
       <ProfileAction to="/settings/profile" icon={<EditIcon />}>

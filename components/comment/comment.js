@@ -12,12 +12,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: theme.spacing(2),
-    // '& > *': {
-    //   margin: theme.spacing(1),
-    // },
   },
   slug: {
     opacity: 0.7,

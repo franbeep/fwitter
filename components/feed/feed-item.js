@@ -49,12 +49,9 @@ const useStyles = makeStyles(theme => ({
     opacity: 0.7,
   },
   title: {
-    'display': 'flex',
-    'alignItems': 'center',
-    'marginBottom': '0.7em',
-    '& *': {
-      // marginRight: '5px',
-    },
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '0.7em',
   },
   media: {
     'position': 'relative',
@@ -88,15 +85,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FeedItem({
-  user,
-  date,
-  body,
-  image = null,
-  isOnline = false,
-  likes = 0,
-  comments = 0,
-}) {
+export function SubMenu() {
   const classes = useStyles();
 
   const [anchor, setAnchor] = React.useState(null);
@@ -110,105 +99,150 @@ export default function FeedItem({
   };
 
   return (
+    <>
+      <IconButton
+        aria-controls="more-options-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+        className={classes.more}
+      >
+        <MoreHorizIcon />
+      </IconButton>
+      <Menu
+        id="more-options-menu"
+        anchorEl={anchor}
+        keepMounted
+        open={Boolean(anchor)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>Report Post</MenuItem>
+        <MenuItem onClick={handleClose}>Block User content</MenuItem>
+      </Menu>
+    </>
+  );
+}
+
+export function ActionBar({ comments, likes }) {
+  const classes = useStyles();
+
+  return (
+    <Box className={classes.actions}>
+      <IconButton>
+        <ShareIcon />
+      </IconButton>
+      <IconButton>
+        <ReplyIcon />
+      </IconButton>
+      <IconButton>
+        {likes ? (
+          <Badge
+            badgeContent={likes}
+            alt={likes}
+            color="secondary"
+            className={classes.likes}
+          >
+            <FavoriteBorderIcon />
+          </Badge>
+        ) : (
+          <FavoriteBorderIcon />
+        )}
+      </IconButton>
+      <IconButton>
+        {comments ? (
+          <Badge
+            badgeContent={comments}
+            alt={comments}
+            color="secondary"
+            className={classes.comments}
+          >
+            <ChatBubbleOutlineIcon />
+          </Badge>
+        ) : (
+          <ChatBubbleOutlineIcon />
+        )}
+      </IconButton>
+    </Box>
+  );
+}
+
+export function BaseContent({ user, date, body, image }) {
+  const classes = useStyles();
+
+  return (
+    <>
+      <Box component="div" className={classes.title}>
+        <Typography component="span">
+          <Typography variant="subtitle1">{user.name}</Typography>
+          <Typography
+            variant="subtitle1"
+            component="span"
+            className={classes.slug}
+          >
+            <Link href={`/user/${slug}`}>{`@${user.slug}`}</Link>{' '}
+          </Typography>
+          <Typography variant="subtitle2" component="span">
+            • Posted {moment(date).fromNow()}
+          </Typography>
+        </Typography>
+      </Box>
+      <Typography variant="h6" paragraph>
+        {body}
+      </Typography>
+
+      {image && (
+        <Box className={classes.media}>
+          <Image
+            src={image}
+            alt="Post Media"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+          />
+        </Box>
+      )}
+    </>
+  );
+}
+
+export function AvatarBox({ user, isOnline, size = 'extra-small' }) {
+  const classes = useStyles();
+
+  return (
+    <Box className={classes.center}>
+      <Avatar
+        src={user.avatar}
+        alt={`${user.name} Avatar`}
+        size={size}
+        badge={isOnline ? OnlineBadge : OfflineBadge}
+      />
+    </Box>
+  );
+}
+
+export default function FeedItem({
+  user,
+  date,
+  body,
+  image = null,
+  isOnline = false,
+  likes = 0,
+  comments = 0,
+}) {
+  const classes = useStyles();
+
+  return (
     <Box component="article">
       <Grid container spacing={2} className={classes.root}>
-        <IconButton
-          aria-controls="more-options-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-          className={classes.more}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <Menu
-          id="more-options-menu"
-          anchorEl={anchor}
-          keepMounted
-          open={Boolean(anchor)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>Report Post</MenuItem>
-          <MenuItem onClick={handleClose}>Block User content</MenuItem>
-        </Menu>
+        <SubMenu />
         <Grid item xs={2}>
-          <Box className={classes.center}>
-            <Avatar
-              src={user.avatar}
-              alt={`${user.name} Avatar`} // !giving warnings
-              size="extra-small"
-              badge={isOnline ? OnlineBadge : OfflineBadge}
-            />
-          </Box>
+          {/* avatar */}
+          <AvatarBox user={user} isOnline={isOnline} />
         </Grid>
         <Grid item xs={9}>
-          <Box component="div" className={classes.title}>
-            <Typography component="span">
-              <Typography variant="subtitle1">{user.name}</Typography>
-              <Typography
-                variant="subtitle1"
-                component="span"
-                className={classes.slug}
-              >
-                <Link href="#">{`@${user.slug}`}</Link>{' '}
-              </Typography>
-              <Typography variant="subtitle2" component="span">
-                • Posted {moment(date).fromNow()}
-              </Typography>
-            </Typography>
-          </Box>
-          <Typography variant="h6" paragraph>
-            {body}
-          </Typography>
+          {/* content */}
+          <BaseContent user={user} date={date} body={body} image={image} />
 
-          {image && (
-            <Box className={classes.media}>
-              // TODO: Add click image => expand
-              <Image
-                src={image}
-                alt="Post Media"
-                layout="fill"
-                objectFit="none"
-                quality={100}
-              />
-            </Box>
-          )}
-
-          <Box className={classes.actions}>
-            <IconButton>
-              <ShareIcon />
-            </IconButton>
-            <IconButton>
-              <ReplyIcon />
-            </IconButton>
-            <IconButton>
-              {likes ? (
-                <Badge
-                  badgeContent={likes}
-                  alt={likes}
-                  color="secondary"
-                  className={classes.likes}
-                >
-                  <FavoriteBorderIcon />
-                </Badge>
-              ) : (
-                <FavoriteBorderIcon />
-              )}
-            </IconButton>
-            <IconButton>
-              {comments ? (
-                <Badge
-                  badgeContent={comments}
-                  alt={comments}
-                  color="secondary"
-                  className={classes.comments}
-                >
-                  <ChatBubbleOutlineIcon />
-                </Badge>
-              ) : (
-                <ChatBubbleOutlineIcon />
-              )}
-            </IconButton>
-          </Box>
+          <ActionBar comments={comments} likes={likes} />
         </Grid>
       </Grid>
       <Divider />
@@ -229,3 +263,5 @@ FeedItem.propTypes = {
   likes: PropTypes.number,
   comments: PropTypes.number,
 };
+
+// TODO: Add click image => expand

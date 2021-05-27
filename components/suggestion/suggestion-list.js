@@ -7,14 +7,12 @@ import clsx from 'clsx';
 import _ from 'lodash';
 
 import Suggestion from './suggestion';
+import { simplifyNumber } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.grey[300],
     borderRadius: theme.spacing(1),
-  },
-  suggestion: {
-    // padding: theme.spacing(2),
   },
   suggestionParent: {
     display: 'flex',
@@ -23,7 +21,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
   },
   first: {
-    // borderRadius: theme.spacing(1),
     borderTop: theme.spacing(1),
   },
   last: {
@@ -46,7 +43,10 @@ export default function SuggestionList({ content, className, ...rest }) {
           <Box key={index}>
             {index > 0 && <Divider />}
             <Box className={classes.suggestionParent}>
-              <Suggestion {...suggestion} className={classes.suggestion} />
+              <Suggestion
+                {...suggestion}
+                numberOfFollowers={simplifyNumber(suggestion.numberOfFollowers)}
+              />
             </Box>
           </Box>
         ))}

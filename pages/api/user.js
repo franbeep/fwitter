@@ -3,9 +3,12 @@
 export default (req, res) => {
   const timeout = Math.floor(Math.random() * 2000);
 
+  if (req.query.slug) {
+    console.log(`Requesting specific user: ${req.query.slug}`);
+  }
+
   setTimeout(() => {
     res.status(200).json({
-      // user here
       avatar: '/avatar.png',
       name: 'Fran',
       slug: 'franbeep',
