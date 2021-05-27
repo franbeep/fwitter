@@ -11,17 +11,28 @@ export default function Home() {
   const fetcher = url => axios.get(url).then(res => res.data);
   const { data: feed, error } = useSWR(`/api/feed`, fetcher);
 
-  const wrapper = content => (
+  if (error)
+    return (
+      <BasePage>
+        <BaseError
+          title="Oops!"
+          message="Couldn't process request. Try again later."
+        />
+      </BasePage>
+    );
+
+  if (!feed)
+    return (
+      <BasePage>
+        <PostForm />
+        <Loading size={70} />
+      </BasePage>
+    );
+
+  return (
     <BasePage>
       <PostForm />
-      {content}
+      <Feed content={feed} />
     </BasePage>
   );
-
-  if (error)
-    return wrapper(
-      <BaseError message="Couldn't process request. Try again later." />
-    ); // error
-  if (!feed) return wrapper(<Loading size={70} />); // loading
-  return wrapper(<Feed content={feed} />); // result
 }

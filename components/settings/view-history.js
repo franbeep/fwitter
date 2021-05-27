@@ -32,9 +32,9 @@ export default function ViewHistory({ content }) {
           {content.map((index, item) => (
             <ListItem key={index}>
               <Typography variant="subtitle1">
-                You replied to{' '}
+                {item.action}
                 <Typography component="span" color="secondary">
-                  <Link href={`/${item.link}`}>this post</Link>
+                  <Link href={`/post/${item.postId}`}>post</Link>
                 </Typography>{' '}
                 {moment(item.date).fromNow()}
               </Typography>
@@ -49,7 +49,8 @@ export default function ViewHistory({ content }) {
 ViewHistory.propTypes = {
   content: PropTypes.arrayOf(
     PropTypes.shape({
-      link: PropTypes.string.isRequired,
+      postId: PropTypes.string.isRequired,
+      action: PropTypes.string.isRequired,
       date: PropTypes.instanceOf(Date).isRequired,
     })
   ),

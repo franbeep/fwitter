@@ -11,12 +11,13 @@ import {
 import Base from './base';
 
 export default function AccountSettingsForm({
+  initialData,
   updateSettingsCallback,
   lockAccountCallback,
   terminateAccountCallback,
 }) {
   const [state, setState] = React.useState({
-    nsfwContent: true,
+    nsfwContent: initialData.nsfwContent,
   });
 
   const handleChange = event => {
@@ -103,6 +104,9 @@ export default function AccountSettingsForm({
 }
 
 AccountSettingsForm.propTypes = {
+  initialData: PropTypes.shape({
+    nsfwContent: PropTypes.bool.isRequired,
+  }),
   updateSettingsCallback: PropTypes.func.isRequired,
   lockAccountCallback: PropTypes.func.isRequired,
   terminateAccountCallback: PropTypes.func.isRequired,

@@ -33,11 +33,11 @@ export default function ViewActivity({ content }) {
             <ListItem index={index}>
               <Typography variant="subtitle1">
                 <Typography component="span" className={classes.slug}>
-                  <Link href="#">{`@${item.slug}`}</Link>
-                </Typography>{' '}
-                commented on your{' '}
+                  <Link href={`/user/${item.slug}`}>{`@${item.slug}`}</Link>
+                </Typography>
+                {item.action}
                 <Typography component="span" color="secondary">
-                  <Link href={`/${item.link}`}>post</Link>
+                  <Link href={`/post/${item.postId}`}>post</Link>
                 </Typography>{' '}
                 {moment(item.date).fromNow()}
               </Typography>
@@ -53,7 +53,8 @@ ViewActivity.propTypes = {
   content: PropTypes.arrayOf(
     PropTypes.shape({
       slug: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
+      action: PropTypes.string.isRequired,
+      postId: PropTypes.string.isRequired,
       date: PropTypes.instanceOf(Date).isRequired,
     })
   ),

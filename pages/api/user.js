@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 export default (req, res) => {
   const timeout = Math.floor(Math.random() * 2000);
 
@@ -10,9 +8,10 @@ export default (req, res) => {
   setTimeout(() => {
     res.status(200).json({
       avatar: '/avatar.png',
+      background: '/background/bananas.png',
       name: 'Fran',
       slug: 'franbeep',
-      activity: 17,
+      activity: 11,
       postCount: 751,
       likesCount: 8952,
       followers: 403,

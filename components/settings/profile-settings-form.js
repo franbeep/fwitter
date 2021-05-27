@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Image from 'next/image';
 
 import { Typography, Box, TextField } from '@material-ui/core';
@@ -40,8 +41,24 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProfileSettingsForm() {
+export default function ProfileSettingsForm(
+  initialData,
+  updateSettingsCallback
+) {
   const classes = useStyles();
+
+  const [state, setState] = React.useState({
+    userAvatar: initialData.avatar,
+    userBackground: initialData.background,
+    userName: initialData.name,
+    userSlug: initialData.slug,
+  });
+
+  const handleChange = event => {
+    const newState = { ...state, [event.target.name]: event.target.checked };
+    setState(newState);
+    updateSettingsCallback(newState);
+  };
 
   const onDrop = React.useCallback(acceptedFiles => {
     // Do something with the files
@@ -66,7 +83,7 @@ export default function ProfileSettingsForm() {
   return (
     <Base title="Profile Settings">
       <Base item xs={4} className={classes.justifyRight}>
-        <Avatar src="/avatar.png" alt="Avatar" size="large" />
+        <Avatar src={`${avatar}`} alt="Avatar" size="large" />
       </Base>
       <Base item xs={4}>
         <Box className={classes.dragZone} style={{ borderRadius: '50%' }}>
@@ -85,7 +102,7 @@ export default function ProfileSettingsForm() {
       <Base item xs={4} className={classes.justifyRight}>
         <Box className={classes.media}>
           <Image
-            src="/background/bananas.png"
+            src={`${background}`}
             alt="Background"
             layout="fill"
             objectFit="cover"
@@ -121,7 +138,9 @@ export default function ProfileSettingsForm() {
           id="standard-basic"
           color="secondary"
           label="User Name"
-          value="My Test Name"
+          value={`${state.userName}`}
+          onChange={handleChange}
+          name="userName"
         />
       </Base>
       <Base item xs={6}>
@@ -137,9 +156,21 @@ export default function ProfileSettingsForm() {
           id="standard-basic"
           color="secondary"
           label="Identifier"
-          value="MyTestSlug"
+          value={`${state.userSlug}`}
+          onChange={handleChange}
+          name="userSlug"
         />
       </Base>
     </Base>
   );
 }
+
+ProfileSettingsForm.propTypes = {
+  initialData: PropTypes.shape({
+    userAvatar: PropTypes.string.isRequired,
+    userBackground: PropTypes.string.isRequired,
+    userName: PropTypes.string.isRequired,
+    userSlug: PropTypes.string.isRequired,
+  }),
+  updateSettingsCallback: PropTypes.func.isRequired,
+};

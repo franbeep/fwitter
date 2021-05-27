@@ -5,14 +5,17 @@ import { Typography, Switch, FormControlLabel } from '@material-ui/core';
 
 import Base from './base';
 
-export default function PageSettingsForm({ updateSettingsCallback }) {
+export default function PageSettingsForm({
+  initialData,
+  updateSettingsCallback,
+}) {
   const [state, setState] = React.useState({
-    showLeftProfile: true,
-    showRelevantContent: true,
-    showAdditionalTrends: true,
-    showPosts: true,
-    showReplies: true,
-    showLikes: true,
+    showLeftProfile: initialData.showLeftProfile,
+    showRelevantContent: initialData.showRelevantContent,
+    showAdditionalTrends: initialData.showAdditionalTrends,
+    showPosts: initialData.showPosts,
+    showReplies: initialData.showReplies,
+    showLikes: initialData.showLikes,
   });
 
   const handleChange = event => {
@@ -146,5 +149,13 @@ export default function PageSettingsForm({ updateSettingsCallback }) {
 }
 
 PageSettingsForm.propTypes = {
+  initialData: PropTypes.shape({
+    showLeftProfile: PropTypes.bool.isRequired,
+    showRelevantContent: PropTypes.bool.isRequired,
+    showAdditionalTrends: PropTypes.bool.isRequired,
+    showPosts: PropTypes.bool.isRequired,
+    showReplies: PropTypes.bool.isRequired,
+    showLikes: PropTypes.bool.isRequired,
+  }),
   updateSettingsCallback: PropTypes.func.isRequired,
 };

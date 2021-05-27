@@ -1,17 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Typography, Switch, FormControlLabel } from '@material-ui/core';
 
 import Base from './base';
 
-export default function PrivacySettingsForm({ updateSettingsCallback }) {
+export default function PrivacySettingsForm({
+  initialData,
+  updateSettingsCallback,
+}) {
   const [state, setState] = React.useState({
-    showPosts: true,
-    showLikes: true,
-    showFollowers: true,
-    showFollowing: true,
-    showOnRelevantContent: true,
-    showOnPeoplesFeed: true,
+    showMyPosts: initialData.showMyPosts,
+    showMyLikes: initialData.showMyLikes,
+    showMyFollowers: initialData.showMyFollowers,
+    showMyFollowing: initialData.showMyFollowing,
+    showOnRelevantContent: initialData.showOnRelevantContent,
+    showOnPeoplesFeed: initialData.showOnPeoplesFeed,
   });
 
   const handleChange = event => {
@@ -30,7 +34,7 @@ export default function PrivacySettingsForm({ updateSettingsCallback }) {
         <FormControlLabel
           control={
             <Switch
-              checked={state.showPosts}
+              checked={state.showMyPosts}
               onChange={handleChange}
               name="showPosts"
             />
@@ -48,7 +52,7 @@ export default function PrivacySettingsForm({ updateSettingsCallback }) {
         <FormControlLabel
           control={
             <Switch
-              checked={state.showLikes}
+              checked={state.showMyLikes}
               onChange={handleChange}
               name="showLikes"
             />
@@ -66,7 +70,7 @@ export default function PrivacySettingsForm({ updateSettingsCallback }) {
         <FormControlLabel
           control={
             <Switch
-              checked={state.showFollowers}
+              checked={state.showMyFollowers}
               onChange={handleChange}
               name="showFollowers"
             />
@@ -84,7 +88,7 @@ export default function PrivacySettingsForm({ updateSettingsCallback }) {
         <FormControlLabel
           control={
             <Switch
-              checked={state.showFollowing}
+              checked={state.showMyFollowing}
               onChange={handleChange}
               name="showFollowing"
             />
@@ -133,3 +137,15 @@ export default function PrivacySettingsForm({ updateSettingsCallback }) {
     </Base>
   );
 }
+
+PrivacySettingsForm.propTypes = {
+  initialData: PropTypes.shape({
+    showMyPosts: PropTypes.bool.isRequired,
+    showMyLikes: PropTypes.bool.isRequired,
+    showMyFollowers: PropTypes.bool.isRequired,
+    showMyFollowing: PropTypes.bool.isRequired,
+    showOnRelevantContent: PropTypes.bool.isRequired,
+    showOnPeoplesFeed: PropTypes.bool.isRequired,
+  }),
+  updateSettingsCallback: PropTypes.func.isRequired,
+};

@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 export default (req, res) => {
   const timeout = Math.floor(Math.random() * 2000);
 
