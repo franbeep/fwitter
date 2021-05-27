@@ -9,9 +9,7 @@ import Loading from '../components/loading';
 
 export default function Home() {
   const fetcher = url => axios.get(url).then(res => res.data);
-  // const { data: feed, error } = useSWR(`/api/feed`, fetcher);
-
-  return <PostForm callback={() => {}} />;
+  const { data: feed, error } = useSWR(`/api/feed`, fetcher);
 
   if (error)
     return (

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  generateBaseInput,
+  BaseInput,
   EmojisOptionButton,
   ClearOptionButton,
   BaseForm,
@@ -17,28 +17,44 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const EmojisOptionButtonMemoized = React.memo(EmojisOptionButton);
+const ClearOptionButtonMemoized = React.memo(ClearOptionButton);
+
 export default function CommentForm({ callback }) {
   const classes = useStyles();
 
-  const {
-    getText,
-    dispatch,
-    ref: inputRef,
-    component: BaseInput,
-  } = generateBaseInput();
+  const inputRef = React.useRef(null);
+  const [body, dispatch] = React.useReducer((state, payload) => {
+    switch (payload.action) {
+      case 'add':
+        return state + payload.value;
+      case 'set':
+        return payload.value;
+    }
+  }, '');
+  const handleInputChange = ev => {
+    dispatch({ action: 'set', value: ev.target.value });
+  };
 
   return (
     <BaseForm callback={() => callback(getText())} className={classes.root}>
       {/* input base */}
-      <BaseInput />
+      <BaseInput
+        inputRef={inputRef}
+        body={body}
+        handleInputChange={handleInputChange}
+      />
 
       {/* actions */}
 
       {/* Insert Emoji Button */}
-      <EmojisOptionButton dispatch={dispatch} inputRef={inputRef} />
+      <EmojisOptionButtonMemoized dispatch={dispatch} inputRef={inputRef} />
 
       {/* Clear All Button */}
-      <ClearOptionButton dispatch={dispatch} setMedia={setLoadedMedia} />
+      <ClearOptionButtonMemoized
+        dispatch={dispatch}
+        setMedia={setLoadedMedia}
+      />
     </BaseForm>
   );
 }

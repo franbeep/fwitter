@@ -131,47 +131,36 @@ function EmojisContainer({ handleAddEmoji, spacing = 2 }) {
 }
 const EmojisContainerMemoized = React.memo(EmojisContainer);
 
-export function generateBaseInput() {
+export function BaseInput({
+  inputRef,
+  body,
+  handleInputChange,
+  children,
+  ...rest
+}) {
   const classes = useStyles();
-  const inputRef = React.useRef(null);
-  const [body, dispatchBody] = React.useReducer((state, payload) => {
-    switch (payload.action) {
-      case 'add':
-        return state + payload.value;
-      case 'set':
-        return payload.value;
-    }
-  }, '');
-  const handleInputChange = ev => {
-    dispatchBody({ action: 'set', value: ev.target.value });
-  };
 
-  return {
-    getText: () => body,
-    dispatch: dispatchBody,
-    ref: inputRef,
-    component: ({ children, ...rest }) => (
-      <div {...rest} onClick={undefined}>
-        <InputBase
-          className={classes.input}
-          placeholder="What's going on?"
-          fullWidth
-          multiline
-          aria-describedby="body-text"
-          inputProps={{ maxLength: MAX_COUNT }}
-          inputRef={inputRef}
-          value={body}
-          autoFocus
-          onChange={handleInputChange}
-        />
-        <FormHelperText id="count-text" style={{ float: 'right' }}>
-          {body.length}/{MAX_COUNT}
-        </FormHelperText>
-        {/* drag input */}
-        {children}
-      </div>
-    ),
-  };
+  return (
+    <div {...rest} onClick={undefined}>
+      <InputBase
+        className={classes.input}
+        placeholder="What's going on?"
+        fullWidth
+        multiline
+        aria-describedby="body-text"
+        inputProps={{ maxLength: MAX_COUNT }}
+        inputRef={inputRef}
+        value={body}
+        autoFocus
+        onChange={handleInputChange}
+      />
+      <FormHelperText id="count-text" style={{ float: 'right' }}>
+        {body.length}/{MAX_COUNT}
+      </FormHelperText>
+      {/* drag input */}
+      {children}
+    </div>
+  );
 }
 
 export function EmojisOptionButton({ dispatch, inputRef }) {
@@ -266,8 +255,12 @@ export function BaseForm({ callback, className, children }) {
   );
 }
 
+const EmojisOptionButtonMemoized = React.memo(EmojisOptionButton);
+const ClearOptionButtonMemoized = React.memo(ClearOptionButton);
 export default function PostForm({ callback }) {
   const classes = useStyles();
+
+  // image input
   const [loadedMedia, setLoadedMedia] = React.useState(null);
   const [file, setFile] = React.useState(null); // !Review this; perhaps no need to have it with loadedMedia
   const onDrop = React.useCallback(acceptedFiles => {
@@ -287,17 +280,29 @@ export default function PostForm({ callback }) {
     maxFiles: 1,
   });
 
-  const {
-    getText,
-    dispatch,
-    ref: inputRef,
-    component: BaseInput,
-  } = generateBaseInput();
+  // base input
+  const inputRef = React.useRef(null);
+  const [body, dispatch] = React.useReducer((state, payload) => {
+    switch (payload.action) {
+      case 'add':
+        return state + payload.value;
+      case 'set':
+        return payload.value;
+    }
+  }, '');
+  const handleInputChange = ev => {
+    dispatch({ action: 'set', value: ev.target.value });
+  };
 
   return (
-    <BaseForm callback={() => callback(getText())}>
+    <BaseForm callback={() => callback(body)}>
       {/* input base */}
-      <BaseInput {...getRootProps()}>
+      <BaseInput
+        inputRef={inputRef}
+        body={body}
+        handleInputChange={handleInputChange}
+        {...getRootProps()}
+      >
         {/* drag input */}
         <input {...getInputProps()} onClick={undefined} />
         {isDragActive && <div className={classes.dragTo}></div>}
@@ -340,10 +345,13 @@ export default function PostForm({ callback }) {
       </IconButton>
 
       {/* Insert Emoji Button */}
-      <EmojisOptionButton dispatch={dispatch} inputRef={inputRef} />
+      <EmojisOptionButtonMemoized dispatch={dispatch} inputRef={inputRef} />
 
       {/* Clear All Button */}
-      <ClearOptionButton dispatch={dispatch} setMedia={setLoadedMedia} />
+      <ClearOptionButtonMemoized
+        dispatch={dispatch}
+        setMedia={setLoadedMedia}
+      />
     </BaseForm>
   );
 }
