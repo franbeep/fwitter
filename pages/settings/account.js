@@ -11,7 +11,10 @@ import BaseError from '../../components/error';
 
 export default function AccountSettings() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
-  const { data: user, error } = useSWR(`/api/settings/user`, fetcher);
+  const { data: user, error } = useSWR(`/api/settings/user`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   if (error)
     return (

@@ -11,7 +11,10 @@ import BaseError from '../../components/error';
 
 export default function ProfileSettings() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
-  const { data: user, error } = useSWR(`/api/user`, fetcher);
+  const { data: user, error } = useSWR(`/api/user`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   if (error)
     return (
@@ -31,6 +34,9 @@ export default function ProfileSettings() {
         <Loading size={70} />
       </BasePage>
     );
+
+  console.log('user:');
+  console.log(user);
 
   return (
     <BasePage>

@@ -26,7 +26,7 @@ export default function BaseSettings({
 
   if (item)
     return (
-      <Grid item {...rest}>
+      <Grid item className={className} {...rest}>
         {children}
       </Grid>
     );

@@ -29,7 +29,7 @@ export default function ViewHistory({ content }) {
       </Base>
       <Base item xs={11}>
         <List className={classes.activity}>
-          {content.map((index, item) => (
+          {content.map((item, index) => (
             <ListItem key={index}>
               <Typography variant="subtitle1">
                 {item.action}

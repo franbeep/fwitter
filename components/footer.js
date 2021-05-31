@@ -26,8 +26,8 @@ export default function Footer({ className, ...rest }) {
     <Box component="footer" className={clsx(classes.root, className)} {...rest}>
       <Typography variant="caption">
         <Box component="span" style={{ float: 'right' }}>
-          <Link href="#">Privacy Policy</Link> •{' '}
-          <Link href="#">Terms of Service</Link>
+          <Link href="/">Privacy Policy</Link> •{' '}
+          <Link href="/">Terms of Service</Link>
         </Box>
         <br />
         Copyright © 2021 Fwitter, All rights reserved

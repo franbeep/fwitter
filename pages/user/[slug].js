@@ -19,7 +19,11 @@ export default function PostPage() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
   const { data: user, error: userError } = useSWR(
     [`/api/user`, params],
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
   const { data: feed, error: feedError } = useSWR(`/api/feed`, fetcher);
 

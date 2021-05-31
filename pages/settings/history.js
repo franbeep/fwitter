@@ -11,7 +11,10 @@ import BaseError from '../../components/error';
 
 export default function History() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
-  const { data: history, error } = useSWR(`/api/settings/history`, fetcher);
+  const { data: history, error } = useSWR(`/api/settings/history`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   if (error)
     return (

@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
 export default function ViewActivity({ content }) {
   const classes = useStyles();
 
+  console.log('ViewActivity');
+  console.log(content);
+
   return (
     <Base title="Activity Settings">
       <Base item xs={1}>
@@ -29,13 +32,13 @@ export default function ViewActivity({ content }) {
       </Base>
       <Base item xs={11}>
         <List className={classes.activity}>
-          {content.map((index, item) => (
+          {content.map((item, index) => (
             <ListItem index={index}>
               <Typography variant="subtitle1">
                 <Typography component="span" className={classes.slug}>
                   <Link href={`/user/${item.slug}`}>{`@${item.slug}`}</Link>
                 </Typography>
-                {item.action}
+                {` ${item.action} `}
                 <Typography component="span" color="secondary">
                   <Link href={`/post/${item.postId}`}>post</Link>
                 </Typography>{' '}

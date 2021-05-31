@@ -51,10 +51,7 @@ export default function CommentForm({ callback }) {
       <EmojisOptionButtonMemoized dispatch={dispatch} inputRef={inputRef} />
 
       {/* Clear All Button */}
-      <ClearOptionButtonMemoized
-        dispatch={dispatch}
-        setMedia={setLoadedMedia}
-      />
+      <ClearOptionButtonMemoized dispatch={dispatch} />
     </BaseForm>
   );
 }

@@ -20,7 +20,11 @@ export default function PostPage() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
   const { data: post, error: postError } = useSWR(
     [`/api/post`, params],
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
   const { data: comments, error: commentsError } = useSWR(
     [`/api/comments`, params],
@@ -47,7 +51,7 @@ export default function PostPage() {
     return (
       <BasePage>
         <GoBack />
-        <Post content={post} />
+        <Post {...post} />
         <Loading size={40} />
       </BasePage>
     );
@@ -55,7 +59,7 @@ export default function PostPage() {
   return (
     <BasePage>
       <GoBack />
-      <Post content={post} />
+      <Post {...post} />
       <CommentForm />
       <CommentsContainer content={comments} />
     </BasePage>

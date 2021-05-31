@@ -11,7 +11,10 @@ import BaseError from '../../components/error';
 
 export default function ActivitySettings() {
   const fetcher = (...args) => axios.get(...args).then(res => res.data);
-  const { data: activity, error } = useSWR(`/api/settings/activity`, fetcher);
+  const { data: activity, error } = useSWR(`/api/settings/activity`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   if (error)
     return (

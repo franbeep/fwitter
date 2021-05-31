@@ -41,10 +41,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProfileSettingsForm(
+export default function ProfileSettingsForm({
   initialData,
-  updateSettingsCallback
-) {
+  updateSettingsCallback,
+}) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -83,7 +83,7 @@ export default function ProfileSettingsForm(
   return (
     <Base title="Profile Settings">
       <Base item xs={4} className={classes.justifyRight}>
-        <Avatar src={`${avatar}`} alt="Avatar" size="large" />
+        <Avatar src={`${state.userAvatar}`} alt="Avatar" size="large" />
       </Base>
       <Base item xs={4}>
         <Box className={classes.dragZone} style={{ borderRadius: '50%' }}>
@@ -102,7 +102,7 @@ export default function ProfileSettingsForm(
       <Base item xs={4} className={classes.justifyRight}>
         <Box className={classes.media}>
           <Image
-            src={`${background}`}
+            src={`${state.userBackground}`}
             alt="Background"
             layout="fill"
             objectFit="cover"

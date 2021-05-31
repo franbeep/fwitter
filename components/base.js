@@ -26,7 +26,10 @@ export default function Base({ children }) {
   const classes = useStyles();
 
   const fetcher = url => axios.get(url).then(res => res.data);
-  const { data: user, error: userError } = useSWR(`/api/user`, fetcher);
+  const { data: user, error: userError } = useSWR(`/api/user`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
   const { data: suggestions, error: suggError } = useSWR(
     '/api/suggestions',
     fetcher

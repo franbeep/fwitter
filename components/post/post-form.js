@@ -83,9 +83,8 @@ const useStyles = makeStyles(theme => ({
 
 const MAX_COUNT = 140;
 
-function EmojisContainer({ handleAddEmoji, spacing = 2 }) {
+function EmojisContainer({ handleAddEmoji, amount, setAmount, spacing = 2 }) {
   const classes = useStyles();
-  const [amount, setAmount] = React.useState(100);
 
   const EmojisList = ({ amount, spacing }) =>
     _.take(EMOJIS, amount).map(emoji => (
@@ -123,7 +122,7 @@ function EmojisContainer({ handleAddEmoji, spacing = 2 }) {
       <EmojisList amount={amount} spacing={spacing} />
       <LoadMoreMemoized
         handleInView={React.useCallback(() => {
-          setAmount(amount + 100);
+          setAmount(Math.min(amount + 100, 1400));
         })}
       />
     </Grid>
@@ -165,6 +164,7 @@ export function BaseInput({
 
 export function EmojisOptionButton({ dispatch, inputRef }) {
   const [anchor, setAnchor] = React.useState(null);
+  const [amount, setAmount] = React.useState(100);
 
   const handleClick = event => {
     setAnchor(event.currentTarget);
@@ -172,6 +172,7 @@ export function EmojisOptionButton({ dispatch, inputRef }) {
 
   const handleClose = () => {
     setAnchor(null);
+    setAmount(100);
   };
 
   const handleAddEmoji = React.useCallback(emoji => {
@@ -202,13 +203,17 @@ export function EmojisOptionButton({ dispatch, inputRef }) {
       >
         {/* hacks! don't remove this */}
         <span style={{ display: 'none' }}></span>
-        <EmojisContainerMemoized handleAddEmoji={handleAddEmoji} />
+        <EmojisContainerMemoized
+          amount={amount}
+          setAmount={setAmount}
+          handleAddEmoji={handleAddEmoji}
+        />
       </Menu>
     </>
   );
 }
 
-export function ClearOptionButton({ dispatch, setMedia }) {
+export function ClearOptionButton({ dispatch, setMedia = () => {} }) {
   return (
     <IconButton
       aria-label="clear all"
