@@ -300,7 +300,7 @@ export default function PostForm({ callback }) {
   };
 
   return (
-    <BaseForm callback={() => callback(body)}>
+    <BaseForm callback={() => callback({ body, media: file })}>
       {/* input base */}
       <BaseInput
         inputRef={inputRef}
